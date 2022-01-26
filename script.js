@@ -3,6 +3,7 @@
 class Workout {
   date = new Date();
   id = (Date.now() + "").slice(-10);
+  clicks = 0;
 
   constructor(coords, distance, duration) {
     this.coords = coords; //[lat, lng]
@@ -13,8 +14,13 @@ class Workout {
   _setDescription() {
     // prettier-ignore
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${months[this.date.getMonth()]
-      } ${this.date.getDate()}`;
+    this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${
+      months[this.date.getMonth()]
+    } ${this.date.getDate()}`;
+  }
+
+  click() {
+    this.clicks++;
   }
 }
 
@@ -70,14 +76,13 @@ class App {
   #map;
   #mapEvent;
   #workouts = [];
+  #mapZoomLevel = 14;
 
   constructor() {
     this._getPosition();
     form.addEventListener("submit", this._newWorkOut.bind(this));
-
-    //Toggling between the elevation and cadence classes
-
     inputType.addEventListener("change", this._toggleElevationField);
+    containerWorkouts.addEventListener("click", this._moveToPopup.bind(this));
   }
   _getPosition() {
     if (navigator.geolocation)
@@ -100,7 +105,7 @@ class App {
 
     const coords = [latitude, longitude];
 
-    this.#map = L.map("map").setView(coords, 14);
+    this.#map = L.map("map").setView(coords, this.#mapZoomLevel);
 
     //const map = L.map("map").setView([51.505, -0.09], 10);
 
@@ -124,7 +129,7 @@ class App {
       inputDuration.value =
       inputCadence.value =
       inputElevation.value =
-      "";
+        "";
 
     form.getElementsByClassName.display = "none";
     form.classList.add("hidden");
@@ -214,8 +219,9 @@ class App {
         <li class="workout workout--${workout.type}" data-id="${workout.id}">
           <h2 class="workout__title">${workout.description}</h2>
           <div class="workout__details">
-            <span class="workout__icon">${workout.type === "cycling" ? "🚴‍♀️" : "🏃"
-      }</span>
+            <span class="workout__icon">${
+              workout.type === "cycling" ? "🚴‍♀️" : "🏃"
+            }</span>
             <span class="workout__value">${workout.distance}</span>
             <span class="workout__unit">km</span>
           </div> 
@@ -262,6 +268,23 @@ class App {
     }
 
     form.insertAdjacentHTML("afterend", html);
+  }
+  _moveToPopup(e) {
+    const workoutEl = e.target.closest(".workout");
+
+    if (!workoutEl) return;
+    const workout = this.#workouts.find(
+      (work) => work.id === workoutEl.dataset.id
+    );
+    this.#map.setView(workout.coords, this.#mapZoomLevel, {
+      animate: true,
+      pan: {},
+    });
+
+    //Using the public interface
+
+    workout.click();
+
   }
 }
 const app = new App();
