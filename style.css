@@ -21,7 +21,7 @@ html {
 }
 
 body {
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   color: var(--color-light--2);
   font-weight: 400;
   line-height: 1.6;
@@ -171,22 +171,24 @@ a:visited {
   display: none;
 }
 
-.copyright {
+
+
+.github {
   margin-top: auto;
-  font-size: 1.0rem;
+  font-size: 1.4rem;
   text-align: center;
-  color: var(--color-light--1);
+  color: #fe8405;
 }
 
-.twitter-link:link,
-.twitter-link:visited {
+.github-link:link,
+.github-link:visited {
   color: var(--color-light--1);
   transition: all 0.2s;
 }
 
-.twitter-link:hover,
-.twitter-link:active {
-  color: var(--color-light--2);
+.github-link:hover,
+.github-link:active {
+  color: #fe8405;
 }
 
 /* MAP */
