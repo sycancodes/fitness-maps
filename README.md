@@ -13,3 +13,6 @@ It allows a user to store his running and cycling workouts in the localStorage o
 
 # Delete Workouts
 run app.reset() in the browser console.
+
+# View Live App
+[VIEW ON NETLIFY](https://fitness-maps.netlify.app)
